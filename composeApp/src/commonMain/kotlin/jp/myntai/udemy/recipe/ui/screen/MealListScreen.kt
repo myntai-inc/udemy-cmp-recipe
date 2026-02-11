@@ -1,44 +1,60 @@
 package jp.myntai.udemy.recipe.ui.screen
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import jp.myntai.udemy.recipe.data.model.Meal
 import jp.myntai.udemy.recipe.ui.component.MealListItem
+import jp.myntai.udemy.recipe.viewmodel.UIState
 
 @Composable
 fun MealListScreen(
+    uiState: UIState<List<Meal>>,
     onMealClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val dummyMeals = listOf(
-        "Beef and Mustard Pie" to "https://www.themealdb.com/images/media/meals/sytuqu1511553755.jpg",
-        "Beef and Oyster pie" to "https://www.themealdb.com/images/media/meals/wrssvt1511556563.jpg",
-        "Beef Banh Mi Bowls" to "https://www.themealdb.com/images/media/meals/z0ageb1583189517.jpg",
-        "Beef Dumpling Stew" to "https://www.themealdb.com/images/media/meals/uyqrrv1511553350.jpg",
-        "Beef Lo Mein" to "https://www.themealdb.com/images/media/meals/1529444830.jpg",
-        "Beef Sunday Roast" to "https://www.themealdb.com/images/media/meals/ssrrrs1503664277.jpg",
-        "Beef Wellington" to "https://www.themealdb.com/images/media/meals/vvpprx1487325699.jpg",
-        "Bistek" to "https://www.themealdb.com/images/media/meals/4pqimk1683207418.jpg",
-    )
-
-    LazyColumn(
-        modifier = modifier.fillMaxSize(),
-        contentPadding = PaddingValues(12.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-    ) {
-        items(dummyMeals) { (name, imageUrl) ->
-            MealListItem(
-                mealName = name,
-                mealImageUrl = imageUrl,
-                onClick = { onMealClick(name) },
-                modifier = Modifier.fillMaxWidth(),
-            )
+    when (uiState) {
+        is UIState.Loading -> {
+            Box(
+                modifier = modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center,
+            ) {
+                CircularProgressIndicator()
+            }
+        }
+        is UIState.Error -> {
+            Box(
+                modifier = modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center,
+            ) {
+                Text(text = uiState.message)
+            }
+        }
+        is UIState.Success -> {
+            LazyColumn(
+                modifier = modifier.fillMaxSize(),
+                contentPadding = PaddingValues(12.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                items(uiState.data) { meal ->
+                    MealListItem(
+                        mealName = meal.strMeal,
+                        mealImageUrl = meal.strMealThumb,
+                        onClick = { onMealClick(meal.idMeal) },
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                }
+            }
         }
     }
 }
