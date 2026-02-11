@@ -8,8 +8,7 @@ import jp.myntai.udemy.recipe.viewmodel.MealViewModel
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun App() {
-    val viewModel = koinViewModel<MealViewModel>()
+fun App(viewModel: MealViewModel = koinViewModel()) {
     val categoriesState = viewModel.categoriesState.collectAsStateWithLifecycle()
 
     MaterialTheme {
