@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import jp.myntai.udemy.recipe.data.local.initContext
 import jp.myntai.udemy.recipe.di.initKoin
+import jp.myntai.udemy.recipe.viewmodel.MealViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,5 +26,5 @@ class MainActivity : ComponentActivity() {
 @Preview
 @Composable
 fun AppAndroidPreview() {
-    App()
+    App(MealViewModel())
 }
