@@ -1,5 +1,8 @@
 package jp.myntai.udemy.recipe.data.model
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class Category(
     val idCategory: String,
     val strCategory: String,
