@@ -28,12 +28,12 @@ class RemoteDataSource {
 
     suspend fun getMealsByCategory(category: String): List<Meal> {
         val response: MealResponse = client.get("$BASE_URL/filter.php?c=$category").body()
-        return response.meals
+        return response.meals.orEmpty()
     }
 
-    suspend fun getMealDetail(idMeal: String): MealDetail {
+    suspend fun getMealDetail(idMeal: String): MealDetail? {
         val response: MealDetailResponse = client.get("$BASE_URL/lookup.php?i=$idMeal").body()
-        return response.meals.first()
+        return response.meals?.firstOrNull()
     }
 
     companion object {

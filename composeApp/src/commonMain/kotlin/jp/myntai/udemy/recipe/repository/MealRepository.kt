@@ -18,7 +18,7 @@ class MealRepository(
     suspend fun getMealsByCategory(category: String): List<Meal> =
         remoteDataSource.getMealsByCategory(category)
 
-    suspend fun getMealDetail(idMeal: String): MealDetail =
+    suspend fun getMealDetail(idMeal: String): MealDetail? =
         remoteDataSource.getMealDetail(idMeal)
 
     fun getFavorites(): Flow<List<FavoriteMeal>> =

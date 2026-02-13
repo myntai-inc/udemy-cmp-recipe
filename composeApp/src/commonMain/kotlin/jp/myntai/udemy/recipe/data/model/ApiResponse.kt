@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 data class CategoryResponse(val categories: List<Category>)
 
 @Serializable
-data class MealResponse(val meals: List<Meal>)
+data class MealResponse(val meals: List<Meal>?)
 
 @Serializable
-data class MealDetailResponse(val meals: List<MealDetail>)
+data class MealDetailResponse(val meals: List<MealDetail>?)

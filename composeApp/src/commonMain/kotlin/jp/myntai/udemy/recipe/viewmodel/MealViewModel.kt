@@ -55,7 +55,11 @@ class MealViewModel(private val repository: MealRepository) : ViewModel() {
             _mealDetailState.value = UIState.Loading
             try {
                 val detail = repository.getMealDetail(idMeal)
-                _mealDetailState.value = UIState.Success(detail)
+                if (detail != null) {
+                    _mealDetailState.value = UIState.Success(detail)
+                } else {
+                    _mealDetailState.value = UIState.Error("Meal not found")
+                }
             } catch (e: Exception) {
                 _mealDetailState.value = UIState.Error(e.message ?: "Unknown error")
             }
