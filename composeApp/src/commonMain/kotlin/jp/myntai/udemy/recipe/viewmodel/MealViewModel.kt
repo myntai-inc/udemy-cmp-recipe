@@ -3,6 +3,7 @@ package jp.myntai.udemy.recipe.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import jp.myntai.udemy.recipe.data.model.Category
+import jp.myntai.udemy.recipe.data.model.FavoriteMeal
 import jp.myntai.udemy.recipe.data.model.Meal
 import jp.myntai.udemy.recipe.data.model.MealDetail
 import jp.myntai.udemy.recipe.repository.MealRepository
@@ -22,8 +23,15 @@ class MealViewModel(private val repository: MealRepository) : ViewModel() {
     private val _mealDetailState = MutableStateFlow<UIState<MealDetail>>(UIState.Loading)
     val mealDetailState: StateFlow<UIState<MealDetail>> = _mealDetailState.asStateFlow()
 
+    private val _favoritesState = MutableStateFlow<UIState<List<FavoriteMeal>>>(UIState.Loading)
+    val favoritesState: StateFlow<UIState<List<FavoriteMeal>>> = _favoritesState.asStateFlow()
+
+    private val _isFavoriteState = MutableStateFlow(false)
+    val isFavoriteState: StateFlow<Boolean> = _isFavoriteState.asStateFlow()
+
     init {
         loadCategories()
+        loadFavorites()
     }
 
     fun loadCategories() {
@@ -62,6 +70,37 @@ class MealViewModel(private val repository: MealRepository) : ViewModel() {
                 }
             } catch (e: Exception) {
                 _mealDetailState.value = UIState.Error(e.message ?: "Unknown error")
+            }
+        }
+    }
+
+    private fun loadFavorites() {
+        viewModelScope.launch {
+            repository.getFavorites().collect { favorites ->
+                _favoritesState.value = UIState.Success(favorites)
+            }
+        }
+    }
+
+    fun checkIsFavorite(idMeal: String) {
+        viewModelScope.launch {
+            _isFavoriteState.value = repository.isFavorite(idMeal)
+        }
+    }
+
+    fun toggleFavorite(mealDetail: MealDetail) {
+        viewModelScope.launch {
+            val favorite = FavoriteMeal(
+                idMeal = mealDetail.idMeal,
+                strMeal = mealDetail.strMeal,
+                strMealThumb = mealDetail.strMealThumb,
+            )
+            if (_isFavoriteState.value) {
+                repository.removeFavorite(favorite)
+                _isFavoriteState.value = false
+            } else {
+                repository.addFavorite(favorite)
+                _isFavoriteState.value = true
             }
         }
     }
