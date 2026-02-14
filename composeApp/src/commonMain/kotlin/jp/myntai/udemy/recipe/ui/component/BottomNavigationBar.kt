@@ -15,6 +15,7 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import jp.myntai.udemy.recipe.navigation.CategoryList
 import jp.myntai.udemy.recipe.navigation.Favorites
+import jp.myntai.udemy.recipe.navigation.MealList
 
 @Composable
 fun BottomNavigationBar(
@@ -26,7 +27,8 @@ fun BottomNavigationBar(
 
     NavigationBar(modifier = modifier) {
         NavigationBarItem(
-            selected = currentDestination?.hasRoute(CategoryList::class) == true,
+            selected = currentDestination?.hasRoute(CategoryList::class) == true
+                || currentDestination?.hasRoute(MealList::class) == true,
             onClick = {
                 navController.navigate(CategoryList) {
                     popUpTo(navController.graph.findStartDestination().id) {

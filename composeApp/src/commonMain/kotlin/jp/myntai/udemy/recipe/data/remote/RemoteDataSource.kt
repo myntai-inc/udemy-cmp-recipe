@@ -2,24 +2,15 @@ package jp.myntai.udemy.recipe.data.remote
 
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
-import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.get
-import io.ktor.serialization.kotlinx.json.json
 import jp.myntai.udemy.recipe.data.model.Category
 import jp.myntai.udemy.recipe.data.model.CategoryResponse
 import jp.myntai.udemy.recipe.data.model.Meal
 import jp.myntai.udemy.recipe.data.model.MealDetail
 import jp.myntai.udemy.recipe.data.model.MealDetailResponse
 import jp.myntai.udemy.recipe.data.model.MealResponse
-import kotlinx.serialization.json.Json
 
-class RemoteDataSource {
-
-    private val client = HttpClient {
-        install(ContentNegotiation) {
-            json(Json { ignoreUnknownKeys = true })
-        }
-    }
+class RemoteDataSource(private val client: HttpClient) {
 
     suspend fun getCategories(): List<Category> {
         val response: CategoryResponse = client.get("$BASE_URL/categories.php").body()

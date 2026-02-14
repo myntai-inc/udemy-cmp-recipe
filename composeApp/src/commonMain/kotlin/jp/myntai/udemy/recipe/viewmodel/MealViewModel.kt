@@ -84,11 +84,16 @@ class MealViewModel(private val repository: MealRepository) : ViewModel() {
 
     fun checkIsFavorite(idMeal: String) {
         viewModelScope.launch {
+            _isFavoriteState.value = false
             _isFavoriteState.value = repository.isFavorite(idMeal)
         }
     }
 
+    private var isTogglingFavorite = false
+
     fun toggleFavorite(mealDetail: MealDetail) {
+        if (isTogglingFavorite) return
+        isTogglingFavorite = true
         viewModelScope.launch {
             val favorite = FavoriteMeal(
                 idMeal = mealDetail.idMeal,
@@ -102,6 +107,7 @@ class MealViewModel(private val repository: MealRepository) : ViewModel() {
                 repository.addFavorite(favorite)
                 _isFavoriteState.value = true
             }
+            isTogglingFavorite = false
         }
     }
 }
