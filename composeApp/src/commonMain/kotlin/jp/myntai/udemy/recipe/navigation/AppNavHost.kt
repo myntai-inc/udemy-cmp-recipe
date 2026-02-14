@@ -7,7 +7,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
-import jp.myntai.udemy.recipe.data.model.MealDetail
 import jp.myntai.udemy.recipe.ui.screen.CategoryListScreen
 import jp.myntai.udemy.recipe.ui.screen.FavoritesScreen
 import jp.myntai.udemy.recipe.ui.screen.MealDetailScreen

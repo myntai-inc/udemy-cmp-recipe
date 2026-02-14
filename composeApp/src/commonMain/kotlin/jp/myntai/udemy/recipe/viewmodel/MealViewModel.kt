@@ -95,19 +95,22 @@ class MealViewModel(private val repository: MealRepository) : ViewModel() {
         if (isTogglingFavorite) return
         isTogglingFavorite = true
         viewModelScope.launch {
-            val favorite = FavoriteMeal(
-                idMeal = mealDetail.idMeal,
-                strMeal = mealDetail.strMeal,
-                strMealThumb = mealDetail.strMealThumb,
-            )
-            if (_isFavoriteState.value) {
-                repository.removeFavorite(favorite)
-                _isFavoriteState.value = false
-            } else {
-                repository.addFavorite(favorite)
-                _isFavoriteState.value = true
+            try {
+                val favorite = FavoriteMeal(
+                    idMeal = mealDetail.idMeal,
+                    strMeal = mealDetail.strMeal,
+                    strMealThumb = mealDetail.strMealThumb,
+                )
+                if (_isFavoriteState.value) {
+                    repository.removeFavorite(favorite)
+                    _isFavoriteState.value = false
+                } else {
+                    repository.addFavorite(favorite)
+                    _isFavoriteState.value = true
+                }
+            } finally {
+                isTogglingFavorite = false
             }
-            isTogglingFavorite = false
         }
     }
 }
