@@ -1,6 +1,7 @@
 package jp.myntai.udemy.recipe.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
@@ -30,25 +31,31 @@ fun AppNavHost(
             CategoryListScreen(
                 uiState = categoriesState.value,
                 onCategoryClick = { category ->
-                    viewModel.loadMealsByCategory(category)
                     navController.navigate(MealList(category))
                 },
             )
         }
 
-        composable<MealList> {
+        composable<MealList> { backStackEntry ->
+            val route = backStackEntry.toRoute<MealList>()
+            LaunchedEffect(route.category) {
+                viewModel.loadMealsByCategory(route.category)
+            }
             val mealsState = viewModel.mealsState.collectAsStateWithLifecycle()
             MealListScreen(
                 uiState = mealsState.value,
                 onMealClick = { idMeal ->
-                    viewModel.loadMealDetail(idMeal)
-                    viewModel.checkIsFavorite(idMeal)
                     navController.navigate(MealDetail(idMeal))
                 },
             )
         }
 
-        composable<MealDetail> {
+        composable<MealDetail> { backStackEntry ->
+            val route = backStackEntry.toRoute<MealDetail>()
+            LaunchedEffect(route.idMeal) {
+                viewModel.loadMealDetail(route.idMeal)
+                viewModel.checkIsFavorite(route.idMeal)
+            }
             val mealDetailState = viewModel.mealDetailState.collectAsStateWithLifecycle()
             val isFavorite = viewModel.isFavoriteState.collectAsStateWithLifecycle()
             MealDetailScreen(
@@ -69,8 +76,6 @@ fun AppNavHost(
             FavoritesScreen(
                 uiState = favoritesState.value,
                 onMealClick = { idMeal ->
-                    viewModel.loadMealDetail(idMeal)
-                    viewModel.checkIsFavorite(idMeal)
                     navController.navigate(MealDetail(idMeal))
                 },
             )

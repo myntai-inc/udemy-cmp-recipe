@@ -11,6 +11,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 
 class MealViewModel(private val repository: MealRepository) : ViewModel() {
 
@@ -84,18 +86,15 @@ class MealViewModel(private val repository: MealRepository) : ViewModel() {
 
     fun checkIsFavorite(idMeal: String) {
         viewModelScope.launch {
-            _isFavoriteState.value = false
             _isFavoriteState.value = repository.isFavorite(idMeal)
         }
     }
 
-    private var isTogglingFavorite = false
+    private val toggleFavoriteMutex = Mutex()
 
     fun toggleFavorite(mealDetail: MealDetail) {
-        if (isTogglingFavorite) return
-        isTogglingFavorite = true
         viewModelScope.launch {
-            try {
+            toggleFavoriteMutex.withLock {
                 val favorite = FavoriteMeal(
                     idMeal = mealDetail.idMeal,
                     strMeal = mealDetail.strMeal,
@@ -108,8 +107,6 @@ class MealViewModel(private val repository: MealRepository) : ViewModel() {
                     repository.addFavorite(favorite)
                     _isFavoriteState.value = true
                 }
-            } finally {
-                isTogglingFavorite = false
             }
         }
     }
