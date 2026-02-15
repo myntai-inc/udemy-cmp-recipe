@@ -386,14 +386,14 @@ MealViewModel のバグ修正と画面ごとの ViewModel 分割。
 
 ### Task 11.2: URL パラメータエンコード
 
-- [ ] `RemoteDataSource.kt` の API 呼び出しを Ktor の `parameter()` に変更
-- [ ] 文字列連結による URL 組み立てを `url { }` ビルダーに置き換え
+- [x] `RemoteDataSource.kt` の API 呼び出しを Ktor の `parameter()` に変更
+- [x] 文字列連結による URL 組み立てを `url { }` ビルダーに置き換え
 - **依存**: なし
 
 ### Task 11.3: 画像プレースホルダー追加
 
-- [ ] `CategoryCard` / `MealListItem` / `MealDetailScreen` の `AsyncImage` に `placeholder` と `error` を追加
-- [ ] Coil3 の `rememberAsyncImagePainter` またはリソース画像で対応
+- [x] `CategoryCard` / `MealListItem` / `MealDetailScreen` の `AsyncImage` に `placeholder` と `error` を追加
+- [x] `ColorPainter(Color.LightGray)` で全プラットフォーム対応
 - **依存**: なし
 
 ### Task 11.4: FAB とコンテンツの重なり修正
