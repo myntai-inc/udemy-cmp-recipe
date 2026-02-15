@@ -45,9 +45,11 @@ fun AppNavHost(
             val mealsState = viewModel.mealsState.collectAsStateWithLifecycle()
             MealListScreen(
                 uiState = mealsState.value,
+                title = route.category,
                 onMealClick = { idMeal ->
                     navController.navigate(MealDetail(idMeal))
                 },
+                onBackClick = { navController.popBackStack() },
                 onRetry = { viewModel.loadMealsByCategory(route.category) },
             )
         }
