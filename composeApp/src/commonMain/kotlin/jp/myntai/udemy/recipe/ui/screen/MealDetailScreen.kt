@@ -123,26 +123,6 @@ fun MealDetailScreen(
                             text = "Area: ${meal.strArea}",
                             style = MaterialTheme.typography.titleMedium,
                         )
-                        val ingredients = meal.ingredients()
-                        if (ingredients.isNotEmpty()) {
-                            Spacer(modifier = Modifier.height(16.dp))
-                            Text(
-                                text = "Ingredients",
-                                style = MaterialTheme.typography.titleLarge,
-                            )
-                            Spacer(modifier = Modifier.height(8.dp))
-                            ingredients.forEach { (ingredient, measure) ->
-                                val text = if (measure.isNotBlank()) {
-                                    "\u2022 $ingredient - $measure"
-                                } else {
-                                    "\u2022 $ingredient"
-                                }
-                                Text(
-                                    text = text,
-                                    style = MaterialTheme.typography.bodyLarge,
-                                )
-                            }
-                        }
                         Spacer(modifier = Modifier.height(16.dp))
                         Text(
                             text = "Instructions",
