@@ -12,13 +12,16 @@ import jp.myntai.udemy.recipe.ui.screen.CategoryListScreen
 import jp.myntai.udemy.recipe.ui.screen.FavoritesScreen
 import jp.myntai.udemy.recipe.ui.screen.MealDetailScreen
 import jp.myntai.udemy.recipe.ui.screen.MealListScreen
-import jp.myntai.udemy.recipe.viewmodel.MealViewModel
+import jp.myntai.udemy.recipe.viewmodel.CategoryListViewModel
+import jp.myntai.udemy.recipe.viewmodel.FavoritesViewModel
+import jp.myntai.udemy.recipe.viewmodel.MealDetailViewModel
+import jp.myntai.udemy.recipe.viewmodel.MealListViewModel
 import jp.myntai.udemy.recipe.viewmodel.UIState
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun AppNavHost(
     navController: NavHostController,
-    viewModel: MealViewModel,
     modifier: Modifier = Modifier,
 ) {
     NavHost(
@@ -27,6 +30,7 @@ fun AppNavHost(
         modifier = modifier,
     ) {
         composable<CategoryList> {
+            val viewModel = koinViewModel<CategoryListViewModel>()
             val categoriesState = viewModel.categoriesState.collectAsStateWithLifecycle()
             CategoryListScreen(
                 uiState = categoriesState.value,
@@ -38,6 +42,7 @@ fun AppNavHost(
         }
 
         composable<MealList> { backStackEntry ->
+            val viewModel = koinViewModel<MealListViewModel>()
             val route = backStackEntry.toRoute<MealList>()
             LaunchedEffect(route.category) {
                 viewModel.loadMealsByCategory(route.category)
@@ -55,6 +60,7 @@ fun AppNavHost(
         }
 
         composable<MealDetail> { backStackEntry ->
+            val viewModel = koinViewModel<MealDetailViewModel>()
             val route = backStackEntry.toRoute<MealDetail>()
             LaunchedEffect(route.idMeal) {
                 viewModel.loadMealDetail(route.idMeal)
@@ -77,6 +83,7 @@ fun AppNavHost(
         }
 
         composable<Favorites> {
+            val viewModel = koinViewModel<FavoritesViewModel>()
             val favoritesState = viewModel.favoritesState.collectAsStateWithLifecycle()
             FavoritesScreen(
                 uiState = favoritesState.value,
