@@ -398,7 +398,7 @@ MealViewModel のバグ修正と画面ごとの ViewModel 分割。
 
 ### Task 11.4: FAB とコンテンツの重なり修正
 
-- [ ] `MealDetailScreen` のスクロールコンテンツ末尾に FAB 分の `Spacer` を追加
+- [x] `MealDetailScreen` のスクロールコンテンツ末尾に FAB 分の `Spacer` を追加
 - **依存**: なし
 
 ### Task 11.5: toggleFavorite() エラーハンドリング追加
