@@ -344,7 +344,7 @@ MealViewModel のバグ修正と画面ごとの ViewModel 分割。
 
 ### Task 10.4: HttpClient の onClose 追加
 
-- [ ] `AppModule.kt` の `single<HttpClient>` に `onClose { it?.close() }` を追加
+- [x] `AppModule.kt` の `single<HttpClient>` に `onClose { it?.close() }` を追加
 - **依存**: なし
 
 ### Task 10.5: ユーザーフレンドリーなエラーメッセージ
