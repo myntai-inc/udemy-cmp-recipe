@@ -29,6 +29,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import jp.myntai.udemy.recipe.data.model.MealDetail
+import jp.myntai.udemy.recipe.ui.component.ErrorContent
 import jp.myntai.udemy.recipe.viewmodel.UIState
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -38,6 +39,7 @@ fun MealDetailScreen(
     isFavorite: Boolean,
     onFavoriteClick: () -> Unit,
     onBackClick: () -> Unit,
+    onRetry: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
@@ -83,12 +85,11 @@ fun MealDetailScreen(
                 }
             }
             is UIState.Error -> {
-                Box(
+                ErrorContent(
+                    message = uiState.message,
+                    onRetry = onRetry,
                     modifier = Modifier.fillMaxSize().padding(innerPadding),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Text(text = uiState.message)
-                }
+                )
             }
             is UIState.Success -> {
                 val meal = uiState.data
