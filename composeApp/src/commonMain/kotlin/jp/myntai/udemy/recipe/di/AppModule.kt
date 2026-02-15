@@ -10,7 +10,10 @@ import jp.myntai.udemy.recipe.data.local.FavoriteMealDao
 import jp.myntai.udemy.recipe.data.local.getDatabaseBuilder
 import jp.myntai.udemy.recipe.data.remote.RemoteDataSource
 import jp.myntai.udemy.recipe.repository.MealRepository
-import jp.myntai.udemy.recipe.viewmodel.MealViewModel
+import jp.myntai.udemy.recipe.viewmodel.CategoryListViewModel
+import jp.myntai.udemy.recipe.viewmodel.FavoritesViewModel
+import jp.myntai.udemy.recipe.viewmodel.MealDetailViewModel
+import jp.myntai.udemy.recipe.viewmodel.MealListViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.serialization.json.Json
 import org.koin.core.module.dsl.viewModel
@@ -38,5 +41,8 @@ val appModule = module {
     single<FavoriteMealDao> { get<AppDatabase>().favoriteMealDao() }
     single<RemoteDataSource> { RemoteDataSource(get()) }
     single<MealRepository> { MealRepository(get(), get()) }
-    viewModel { MealViewModel(get()) }
+    viewModel { CategoryListViewModel(get()) }
+    viewModel { MealListViewModel(get()) }
+    viewModel { MealDetailViewModel(get()) }
+    viewModel { FavoritesViewModel(get()) }
 }

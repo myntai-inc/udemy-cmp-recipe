@@ -356,14 +356,14 @@ MealViewModel のバグ修正と画面ごとの ViewModel 分割。
 
 ### Task 10.6: ViewModel を画面ごとに分割
 
-- [ ] `CategoryListViewModel.kt` を新規作成
-- [ ] `MealListViewModel.kt` を新規作成
-- [ ] `MealDetailViewModel.kt` を新規作成
-- [ ] `FavoritesViewModel.kt` を新規作成
-- [ ] `AppModule.kt` の DI 定義を4つの ViewModel に分割
-- [ ] `AppNavHost.kt` で各画面内で `koinViewModel()` を取得
-- [ ] `App.kt` から ViewModel パラメータを削除
-- [ ] `MealViewModel.kt` を削除
+- [x] `CategoryListViewModel.kt` を新規作成
+- [x] `MealListViewModel.kt` を新規作成
+- [x] `MealDetailViewModel.kt` を新規作成
+- [x] `FavoritesViewModel.kt` を新規作成
+- [x] `AppModule.kt` の DI 定義を4つの ViewModel に分割
+- [x] `AppNavHost.kt` で各画面内で `koinViewModel()` を取得
+- [x] `App.kt` から ViewModel パラメータを削除
+- [x] `MealViewModel.kt` を削除
 - **依存**: Task 10.2, Task 10.3, Task 10.4, Task 10.5
 
 ### Task 10.7: docs/tasks.md の最終更新

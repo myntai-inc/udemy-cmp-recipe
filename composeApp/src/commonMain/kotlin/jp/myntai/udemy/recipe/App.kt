@@ -11,11 +11,9 @@ import androidx.navigation.compose.rememberNavController
 import jp.myntai.udemy.recipe.navigation.AppNavHost
 import jp.myntai.udemy.recipe.navigation.MealDetail
 import jp.myntai.udemy.recipe.ui.component.BottomNavigationBar
-import jp.myntai.udemy.recipe.viewmodel.MealViewModel
-import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun App(viewModel: MealViewModel = koinViewModel()) {
+fun App() {
     val navController = rememberNavController()
 
     MaterialTheme {
@@ -30,7 +28,6 @@ fun App(viewModel: MealViewModel = koinViewModel()) {
         ) { innerPadding ->
             AppNavHost(
                 navController = navController,
-                viewModel = viewModel,
                 modifier = Modifier.padding(innerPadding),
             )
         }
