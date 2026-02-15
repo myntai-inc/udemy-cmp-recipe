@@ -275,6 +275,47 @@ Navigation KMP による画面遷移を実装し、全画面を接続する。
 
 ---
 
+## Section 9: リファクタリングと品質改善
+
+コードレビューで特定した設計・品質上の問題を修正する。
+
+### Task 9.1: 未使用テンプレートファイルの削除
+
+- [x] `Greeting.kt`, `Platform.kt`, `Platform.android.kt`, `Platform.ios.kt`, `Platform.jvm.kt` を削除
+- [x] `docs/tasks.md` に Section 9 全体のタスク定義を追記
+- **依存**: なし
+
+### Task 9.2: LazyList に key パラメータを追加
+
+- [ ] `CategoryListScreen.kt` の `items()` に `key = { it.idCategory }` を追加
+- [ ] `MealListScreen.kt` の `items()` に `key = { it.idMeal }` を追加
+- **依存**: なし
+
+### Task 9.3: データロードをルート引数ベースに変更
+
+- [ ] `AppNavHost.kt` でナビゲーションコールバックから `LaunchedEffect` ベースのデータロードに変更
+- [ ] `MealViewModel.kt` の `checkIsFavorite()` から不要なリセット (`_isFavoriteState.value = false`) を削除
+- [ ] `MealViewModel.kt` の `toggleFavorite()` を `Mutex` ベースに変更
+- **依存**: なし
+
+### Task 9.4: エラー画面にリトライボタンを追加
+
+- [ ] `ui/component/ErrorContent.kt` を新規作成
+- [ ] 4画面に `onRetry` パラメータを追加し `ErrorContent` を使用
+- [ ] `MealViewModel.kt` の `loadFavorites()` を `private` → `fun` に変更
+- [ ] `AppNavHost.kt` で各画面に `onRetry` ラムダを渡す
+- **依存**: Task 9.3
+
+### Task 9.5: 画面構造の統一 (TopAppBar)
+
+- [ ] `CategoryListScreen.kt` に `Scaffold` + `TopAppBar` (タイトル "MyRecipe") を追加
+- [ ] `MealListScreen.kt` に `Scaffold` + `TopAppBar` (タイトル = カテゴリ名 + 戻るボタン) を追加
+- [ ] `FavoritesScreen.kt` に `Scaffold` + `TopAppBar` (タイトル "Favorites") を追加
+- [ ] 各画面のコンテンツに `Modifier.padding(innerPadding)` を適用
+- **依存**: Task 9.4
+
+---
+
 ## 依存関係サマリー
 
 ```
@@ -291,4 +332,6 @@ Section 6 (Ktor API)  ← Section 5 で DI 基盤が整っていること
 Section 7 (Navigation) ← Section 6 で全データ層が完成していること
     ↓
 Section 8 (動作確認)   ← 全セクション完了後
+    ↓
+Section 9 (リファクタリング) ← コードレビュー後の品質改善
 ```
