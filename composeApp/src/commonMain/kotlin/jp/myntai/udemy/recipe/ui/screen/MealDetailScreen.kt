@@ -130,6 +130,8 @@ fun MealDetailScreen(
                             style = MaterialTheme.typography.bodyLarge,
                         )
                     }
+                    // FAB と重ならないよう余白を確保
+                    Spacer(modifier = Modifier.height(80.dp))
                 }
             }
         }
