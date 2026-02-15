@@ -29,7 +29,4 @@ class MealRepository(
 
     suspend fun removeFavorite(meal: FavoriteMeal) =
         favoriteMealDao.delete(meal)
-
-    suspend fun isFavorite(idMeal: String): Boolean =
-        favoriteMealDao.getById(idMeal) != null
 }
