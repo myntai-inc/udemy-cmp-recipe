@@ -9,8 +9,12 @@ import jp.myntai.udemy.recipe.data.model.MealDetail
 import jp.myntai.udemy.recipe.repository.MealRepository
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -26,15 +30,21 @@ class MealViewModel(private val repository: MealRepository) : ViewModel() {
     private val _mealDetailState = MutableStateFlow<UIState<MealDetail>>(UIState.Loading)
     val mealDetailState: StateFlow<UIState<MealDetail>> = _mealDetailState.asStateFlow()
 
-    private val _favoritesState = MutableStateFlow<UIState<List<FavoriteMeal>>>(UIState.Loading)
-    val favoritesState: StateFlow<UIState<List<FavoriteMeal>>> = _favoritesState.asStateFlow()
+    val favoritesState: StateFlow<UIState<List<FavoriteMeal>>> =
+        repository.getFavorites()
+            .map<List<FavoriteMeal>, UIState<List<FavoriteMeal>>> { UIState.Success(it) }
+            .catch { emit(UIState.Error(it.message ?: "Failed to load favorites")) }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5_000),
+                initialValue = UIState.Loading,
+            )
 
     private val _isFavoriteState = MutableStateFlow(false)
     val isFavoriteState: StateFlow<Boolean> = _isFavoriteState.asStateFlow()
 
     init {
         loadCategories()
-        loadFavorites()
     }
 
     fun loadCategories() {
@@ -79,14 +89,6 @@ class MealViewModel(private val repository: MealRepository) : ViewModel() {
                 }
             } catch (e: Exception) {
                 _mealDetailState.value = UIState.Error(e.message ?: "Unknown error")
-            }
-        }
-    }
-
-    fun loadFavorites() {
-        viewModelScope.launch {
-            repository.getFavorites().collect { favorites ->
-                _favoritesState.value = UIState.Success(favorites)
             }
         }
     }

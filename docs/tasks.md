@@ -329,9 +329,9 @@ MealViewModel のバグ修正と画面ごとの ViewModel 分割。
 
 ### Task 10.2: loadFavorites() の重複 collect 修正
 
-- [ ] `MealViewModel.kt` の `_favoritesState` + `loadFavorites()` を `stateIn` に置き換え
-- [ ] `init` ブロックから `loadFavorites()` を削除
-- [ ] `AppNavHost.kt` の Favorites `onRetry` を no-op に変更
+- [x] `MealViewModel.kt` の `_favoritesState` + `loadFavorites()` を `stateIn` に置き換え
+- [x] `init` ブロックから `loadFavorites()` を削除
+- [x] `AppNavHost.kt` の Favorites `onRetry` を no-op に変更
 - **依存**: なし
 
 ### Task 10.3: isFavorite を favorites Flow から導出
