@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import jp.myntai.udemy.recipe.data.model.Category
 import jp.myntai.udemy.recipe.repository.MealRepository
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -24,6 +25,8 @@ class CategoryListViewModel(private val repository: MealRepository) : ViewModel(
             try {
                 val categories = repository.getCategories()
                 _categoriesState.value = UIState.Success(categories)
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Exception) {
                 _categoriesState.value = UIState.Error(e.toUserFriendlyMessage())
             }

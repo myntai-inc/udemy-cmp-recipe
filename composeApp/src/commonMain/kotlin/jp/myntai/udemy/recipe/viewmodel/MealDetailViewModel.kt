@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import jp.myntai.udemy.recipe.data.model.FavoriteMeal
 import jp.myntai.udemy.recipe.data.model.MealDetail
 import jp.myntai.udemy.recipe.repository.MealRepository
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -47,6 +48,8 @@ class MealDetailViewModel(private val repository: MealRepository) : ViewModel() 
                 } else {
                     _mealDetailState.value = UIState.Error("Meal not found")
                 }
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Exception) {
                 _mealDetailState.value = UIState.Error(e.toUserFriendlyMessage())
             }
