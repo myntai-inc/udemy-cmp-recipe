@@ -13,7 +13,9 @@ import jp.myntai.udemy.recipe.repository.MealRepository
 import jp.myntai.udemy.recipe.viewmodel.MealViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.serialization.json.Json
+import org.koin.core.module.dsl.onClose
 import org.koin.core.module.dsl.viewModel
+import org.koin.core.module.dsl.withOptions
 import org.koin.dsl.module
 
 val appModule = module {
@@ -27,7 +29,7 @@ val appModule = module {
                 connectTimeoutMillis = 15_000
             }
         }
-    }
+    } withOptions { onClose { it?.close() } }
     single<AppDatabase> {
         getDatabaseBuilder()
             .setDriver(BundledSQLiteDriver())
