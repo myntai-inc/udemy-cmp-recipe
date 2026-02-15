@@ -287,31 +287,31 @@ Navigation KMP による画面遷移を実装し、全画面を接続する。
 
 ### Task 9.2: LazyList に key パラメータを追加
 
-- [ ] `CategoryListScreen.kt` の `items()` に `key = { it.idCategory }` を追加
-- [ ] `MealListScreen.kt` の `items()` に `key = { it.idMeal }` を追加
+- [x] `CategoryListScreen.kt` の `items()` に `key = { it.idCategory }` を追加
+- [x] `MealListScreen.kt` の `items()` に `key = { it.idMeal }` を追加
 - **依存**: なし
 
 ### Task 9.3: データロードをルート引数ベースに変更
 
-- [ ] `AppNavHost.kt` でナビゲーションコールバックから `LaunchedEffect` ベースのデータロードに変更
-- [ ] `MealViewModel.kt` の `checkIsFavorite()` から不要なリセット (`_isFavoriteState.value = false`) を削除
-- [ ] `MealViewModel.kt` の `toggleFavorite()` を `Mutex` ベースに変更
+- [x] `AppNavHost.kt` でナビゲーションコールバックから `LaunchedEffect` ベースのデータロードに変更
+- [x] `MealViewModel.kt` の `checkIsFavorite()` から不要なリセット (`_isFavoriteState.value = false`) を削除
+- [x] `MealViewModel.kt` の `toggleFavorite()` を `Mutex` ベースに変更
 - **依存**: なし
 
 ### Task 9.4: エラー画面にリトライボタンを追加
 
-- [ ] `ui/component/ErrorContent.kt` を新規作成
-- [ ] 4画面に `onRetry` パラメータを追加し `ErrorContent` を使用
-- [ ] `MealViewModel.kt` の `loadFavorites()` を `private` → `fun` に変更
-- [ ] `AppNavHost.kt` で各画面に `onRetry` ラムダを渡す
+- [x] `ui/component/ErrorContent.kt` を新規作成
+- [x] 4画面に `onRetry` パラメータを追加し `ErrorContent` を使用
+- [x] `MealViewModel.kt` の `loadFavorites()` を `private` → `fun` に変更
+- [x] `AppNavHost.kt` で各画面に `onRetry` ラムダを渡す
 - **依存**: Task 9.3
 
 ### Task 9.5: 画面構造の統一 (TopAppBar)
 
-- [ ] `CategoryListScreen.kt` に `Scaffold` + `TopAppBar` (タイトル "MyRecipe") を追加
-- [ ] `MealListScreen.kt` に `Scaffold` + `TopAppBar` (タイトル = カテゴリ名 + 戻るボタン) を追加
-- [ ] `FavoritesScreen.kt` に `Scaffold` + `TopAppBar` (タイトル "Favorites") を追加
-- [ ] 各画面のコンテンツに `Modifier.padding(innerPadding)` を適用
+- [x] `CategoryListScreen.kt` に `Scaffold` + `TopAppBar` (タイトル "MyRecipe") を追加
+- [x] `MealListScreen.kt` に `Scaffold` + `TopAppBar` (タイトル = カテゴリ名 + 戻るボタン) を追加
+- [x] `FavoritesScreen.kt` に `Scaffold` + `TopAppBar` (タイトル "Favorites") を追加
+- [x] 各画面のコンテンツに `Modifier.padding(innerPadding)` を適用
 - **依存**: Task 9.4
 
 ---
@@ -336,10 +336,10 @@ MealViewModel のバグ修正と画面ごとの ViewModel 分割。
 
 ### Task 10.3: isFavorite を favorites Flow から導出
 
-- [ ] `_isFavoriteState`, `checkIsFavorite()`, `Mutex` を削除
-- [ ] `combine` で `isFavoriteState` を導出
-- [ ] `toggleFavorite()` から手動トグルを削除
-- [ ] `AppNavHost.kt` で `checkIsFavorite()` → `setCurrentMealId()` に変更
+- [x] `_isFavoriteState`, `checkIsFavorite()`, `Mutex` を削除
+- [x] `combine` で `isFavoriteState` を導出
+- [x] `toggleFavorite()` から手動トグルを削除
+- [x] `AppNavHost.kt` で `checkIsFavorite()` → `setCurrentMealId()` に変更
 - **依存**: Task 10.2
 
 ### Task 10.4: HttpClient の onClose 追加
@@ -349,9 +349,9 @@ MealViewModel のバグ修正と画面ごとの ViewModel 分割。
 
 ### Task 10.5: ユーザーフレンドリーなエラーメッセージ
 
-- [ ] `viewmodel/ErrorMessages.kt` を新規作成
-- [ ] `Exception.toUserFriendlyMessage()` 拡張関数を実装
-- [ ] `MealViewModel.kt` の全エラーメッセージを置換
+- [x] `viewmodel/ErrorMessages.kt` を新規作成
+- [x] `Exception.toUserFriendlyMessage()` 拡張関数を実装
+- [x] `MealViewModel.kt` の全エラーメッセージを置換
 - **依存**: なし
 
 ### Task 10.6: ViewModel を画面ごとに分割
@@ -368,8 +368,8 @@ MealViewModel のバグ修正と画面ごとの ViewModel 分割。
 
 ### Task 10.7: docs/tasks.md の最終更新
 
-- [ ] Section 10 の全チェックボックスを `[x]` に更新
-- [ ] 依存関係サマリーに Section 10 を追加
+- [x] Section 9, 10 の全チェックボックスを `[x]` に更新
+- [x] 依存関係サマリーに Section 10 を追加
 - **依存**: Task 10.6
 
 ---
