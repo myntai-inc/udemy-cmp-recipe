@@ -10,19 +10,20 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import jp.myntai.udemy.recipe.data.model.Category
 import jp.myntai.udemy.recipe.ui.component.CategoryCard
+import jp.myntai.udemy.recipe.ui.component.ErrorContent
 import jp.myntai.udemy.recipe.viewmodel.UIState
 
 @Composable
 fun CategoryListScreen(
     uiState: UIState<List<Category>>,
     onCategoryClick: (String) -> Unit,
+    onRetry: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     when (uiState) {
@@ -35,12 +36,11 @@ fun CategoryListScreen(
             }
         }
         is UIState.Error -> {
-            Box(
+            ErrorContent(
+                message = uiState.message,
+                onRetry = onRetry,
                 modifier = modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center,
-            ) {
-                Text(text = uiState.message)
-            }
+            )
         }
         is UIState.Success -> {
             LazyVerticalGrid(

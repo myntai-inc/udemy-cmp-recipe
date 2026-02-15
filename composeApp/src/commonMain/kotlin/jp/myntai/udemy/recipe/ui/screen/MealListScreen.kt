@@ -8,12 +8,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import jp.myntai.udemy.recipe.data.model.Meal
+import jp.myntai.udemy.recipe.ui.component.ErrorContent
 import jp.myntai.udemy.recipe.ui.component.MealListItem
 import jp.myntai.udemy.recipe.viewmodel.UIState
 
@@ -21,6 +21,7 @@ import jp.myntai.udemy.recipe.viewmodel.UIState
 fun MealListScreen(
     uiState: UIState<List<Meal>>,
     onMealClick: (String) -> Unit,
+    onRetry: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     when (uiState) {
@@ -33,12 +34,11 @@ fun MealListScreen(
             }
         }
         is UIState.Error -> {
-            Box(
+            ErrorContent(
+                message = uiState.message,
+                onRetry = onRetry,
                 modifier = modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center,
-            ) {
-                Text(text = uiState.message)
-            }
+            )
         }
         is UIState.Success -> {
             LazyColumn(

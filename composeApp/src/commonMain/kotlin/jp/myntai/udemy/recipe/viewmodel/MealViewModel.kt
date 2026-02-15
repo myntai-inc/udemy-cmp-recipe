@@ -83,7 +83,7 @@ class MealViewModel(private val repository: MealRepository) : ViewModel() {
         }
     }
 
-    private fun loadFavorites() {
+    fun loadFavorites() {
         viewModelScope.launch {
             repository.getFavorites().collect { favorites ->
                 _favoritesState.value = UIState.Success(favorites)

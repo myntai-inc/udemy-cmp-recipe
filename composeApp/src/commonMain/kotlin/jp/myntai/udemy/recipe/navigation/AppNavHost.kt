@@ -33,6 +33,7 @@ fun AppNavHost(
                 onCategoryClick = { category ->
                     navController.navigate(MealList(category))
                 },
+                onRetry = { viewModel.loadCategories() },
             )
         }
 
@@ -47,6 +48,7 @@ fun AppNavHost(
                 onMealClick = { idMeal ->
                     navController.navigate(MealDetail(idMeal))
                 },
+                onRetry = { viewModel.loadMealsByCategory(route.category) },
             )
         }
 
@@ -68,6 +70,7 @@ fun AppNavHost(
                     }
                 },
                 onBackClick = { navController.popBackStack() },
+                onRetry = { viewModel.loadMealDetail(route.idMeal) },
             )
         }
 
@@ -78,6 +81,7 @@ fun AppNavHost(
                 onMealClick = { idMeal ->
                     navController.navigate(MealDetail(idMeal))
                 },
+                onRetry = { viewModel.loadFavorites() },
             )
         }
     }
