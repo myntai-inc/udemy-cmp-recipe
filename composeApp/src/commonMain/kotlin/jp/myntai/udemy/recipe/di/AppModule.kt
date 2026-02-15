@@ -10,6 +10,7 @@ import jp.myntai.udemy.recipe.data.local.FavoriteMealDao
 import jp.myntai.udemy.recipe.data.local.getDatabaseBuilder
 import jp.myntai.udemy.recipe.data.remote.RemoteDataSource
 import jp.myntai.udemy.recipe.repository.MealRepository
+import jp.myntai.udemy.recipe.repository.MealRepositoryImpl
 import jp.myntai.udemy.recipe.viewmodel.CategoryListViewModel
 import jp.myntai.udemy.recipe.viewmodel.FavoritesViewModel
 import jp.myntai.udemy.recipe.viewmodel.MealDetailViewModel
@@ -40,7 +41,7 @@ val appModule = module {
     }
     single<FavoriteMealDao> { get<AppDatabase>().favoriteMealDao() }
     single<RemoteDataSource> { RemoteDataSource(get()) }
-    single<MealRepository> { MealRepository(get(), get()) }
+    single<MealRepository> { MealRepositoryImpl(get(), get()) }
     viewModel { CategoryListViewModel(get()) }
     viewModel { MealListViewModel(get()) }
     viewModel { MealDetailViewModel(get()) }
