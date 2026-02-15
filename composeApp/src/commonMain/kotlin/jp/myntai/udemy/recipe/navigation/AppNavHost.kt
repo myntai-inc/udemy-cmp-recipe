@@ -58,7 +58,7 @@ fun AppNavHost(
             val route = backStackEntry.toRoute<MealDetail>()
             LaunchedEffect(route.idMeal) {
                 viewModel.loadMealDetail(route.idMeal)
-                viewModel.checkIsFavorite(route.idMeal)
+                viewModel.setCurrentMealId(route.idMeal)
             }
             val mealDetailState = viewModel.mealDetailState.collectAsStateWithLifecycle()
             val isFavorite = viewModel.isFavoriteState.collectAsStateWithLifecycle()

@@ -13,11 +13,10 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 
 class MealViewModel(private val repository: MealRepository) : ViewModel() {
 
@@ -40,11 +39,23 @@ class MealViewModel(private val repository: MealRepository) : ViewModel() {
                 initialValue = UIState.Loading,
             )
 
-    private val _isFavoriteState = MutableStateFlow(false)
-    val isFavoriteState: StateFlow<Boolean> = _isFavoriteState.asStateFlow()
+    private val _currentMealId = MutableStateFlow<String?>(null)
+
+    val isFavoriteState: StateFlow<Boolean> =
+        combine(repository.getFavorites(), _currentMealId) { favorites, currentMealId ->
+            favorites.any { it.idMeal == currentMealId }
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = false,
+        )
 
     init {
         loadCategories()
+    }
+
+    fun setCurrentMealId(idMeal: String) {
+        _currentMealId.value = idMeal
     }
 
     fun loadCategories() {
@@ -93,31 +104,17 @@ class MealViewModel(private val repository: MealRepository) : ViewModel() {
         }
     }
 
-    fun checkIsFavorite(idMeal: String) {
-        viewModelScope.launch {
-            toggleFavoriteMutex.withLock {
-                _isFavoriteState.value = repository.isFavorite(idMeal)
-            }
-        }
-    }
-
-    private val toggleFavoriteMutex = Mutex()
-
     fun toggleFavorite(mealDetail: MealDetail) {
         viewModelScope.launch {
-            toggleFavoriteMutex.withLock {
-                val favorite = FavoriteMeal(
-                    idMeal = mealDetail.idMeal,
-                    strMeal = mealDetail.strMeal,
-                    strMealThumb = mealDetail.strMealThumb,
-                )
-                if (_isFavoriteState.value) {
-                    repository.removeFavorite(favorite)
-                    _isFavoriteState.value = false
-                } else {
-                    repository.addFavorite(favorite)
-                    _isFavoriteState.value = true
-                }
+            val favorite = FavoriteMeal(
+                idMeal = mealDetail.idMeal,
+                strMeal = mealDetail.strMeal,
+                strMealThumb = mealDetail.strMealThumb,
+            )
+            if (isFavoriteState.value) {
+                repository.removeFavorite(favorite)
+            } else {
+                repository.addFavorite(favorite)
             }
         }
     }
