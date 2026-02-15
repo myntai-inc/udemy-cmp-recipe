@@ -19,7 +19,4 @@ interface FavoriteMealDao {
 
     @Query("SELECT * FROM favorite_meals")
     fun getAll(): Flow<List<FavoriteMeal>>
-
-    @Query("SELECT * FROM favorite_meals WHERE idMeal = :idMeal")
-    suspend fun getById(idMeal: String): FavoriteMeal?
 }

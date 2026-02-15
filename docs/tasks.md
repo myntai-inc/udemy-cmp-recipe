@@ -374,6 +374,76 @@ MealViewModel のバグ修正と画面ごとの ViewModel 分割。
 
 ---
 
+## Section 11: 設計改善と機能追加
+
+コードレビューで特定した設計・品質・機能面の改善。
+
+### Task 11.1: デッドコード削除
+
+- [x] `MealRepository.isFavorite()` を削除 (Task 10.3 で未使用になった)
+- [x] `FavoriteMealDao.getById()` を削除 (isFavorite 削除に伴い未使用)
+- **依存**: なし
+
+### Task 11.2: URL パラメータエンコード
+
+- [ ] `RemoteDataSource.kt` の API 呼び出しを Ktor の `parameter()` に変更
+- [ ] 文字列連結による URL 組み立てを `url { }` ビルダーに置き換え
+- **依存**: なし
+
+### Task 11.3: 画像プレースホルダー追加
+
+- [ ] `CategoryCard` / `MealListItem` / `MealDetailScreen` の `AsyncImage` に `placeholder` と `error` を追加
+- [ ] Coil3 の `rememberAsyncImagePainter` またはリソース画像で対応
+- **依存**: なし
+
+### Task 11.4: FAB とコンテンツの重なり修正
+
+- [ ] `MealDetailScreen` のスクロールコンテンツ末尾に FAB 分の `Spacer` を追加
+- **依存**: なし
+
+### Task 11.5: toggleFavorite() エラーハンドリング追加
+
+- [ ] `MealDetailViewModel.toggleFavorite()` に try-catch を追加
+- [ ] DB 操作失敗時にユーザーへ通知する仕組みを追加 (Snackbar 等)
+- **依存**: なし
+
+### Task 11.6: FavoritesScreen の onRetry 整理
+
+- [ ] `FavoritesViewModel` は Flow ベースのため Error 状態にならない前提を明確化
+- [ ] `FavoritesScreen` から不要な `onRetry` パラメータを削除、または Error 表示自体を除去
+- **依存**: なし
+
+### Task 11.7: Scaffold 構造の統一
+
+- [ ] `App.kt` の Scaffold (bottomBar) と各画面の Scaffold (TopAppBar) のネストを解消
+- [ ] 各画面から個別の Scaffold を除去し、TopAppBar を `App.kt` 側で統一管理
+- [ ] 画面ごとのタイトル・ナビゲーションアイコンを NavBackStackEntry から動的に決定
+- **依存**: Task 11.4, Task 11.6
+
+### Task 11.8: テーマとダークモード対応
+
+- [ ] `ui/theme/` パッケージにカスタムテーマを作成
+- [ ] `isSystemInDarkTheme()` でライト/ダーク切り替え
+- [ ] カスタムカラースキームを定義
+- **依存**: なし
+
+### Task 11.9: 材料データ (Ingredients) の表示
+
+- [ ] `MealDetail` モデルに `strIngredient1`〜`strIngredient20` / `strMeasure1`〜`strMeasure20` を追加
+- [ ] 材料と分量をペアにしてリスト化するロジックを実装
+- [ ] `MealDetailScreen` に材料セクションを追加
+- **依存**: なし
+
+### Task 11.10: ViewModel のユニットテスト追加
+
+- [ ] テスト用の依存 (kotlinx-coroutines-test, Turbine 等) を追加
+- [ ] `CategoryListViewModel` のテストを作成 (Loading → Success / Error)
+- [ ] `MealDetailViewModel` のテストを作成 (お気に入りトグル)
+- [ ] `FakeRepository` を作成してテスト用に差し替え
+- **依存**: Task 11.1〜11.9 完了後
+
+---
+
 ## 依存関係サマリー
 
 ```
@@ -394,4 +464,6 @@ Section 8 (動作確認)   ← 全セクション完了後
 Section 9 (リファクタリング) ← コードレビュー後の品質改善
     ↓
 Section 10 (バグ修正と ViewModel 分割) ← Section 9 完了後
+    ↓
+Section 11 (設計改善と機能追加) ← Section 10 完了後
 ```
