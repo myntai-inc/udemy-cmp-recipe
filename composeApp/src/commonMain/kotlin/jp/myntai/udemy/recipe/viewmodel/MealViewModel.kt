@@ -7,10 +7,13 @@ import jp.myntai.udemy.recipe.data.model.FavoriteMeal
 import jp.myntai.udemy.recipe.data.model.Meal
 import jp.myntai.udemy.recipe.data.model.MealDetail
 import jp.myntai.udemy.recipe.repository.MealRepository
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 
 class MealViewModel(private val repository: MealRepository) : ViewModel() {
 
@@ -46,8 +49,11 @@ class MealViewModel(private val repository: MealRepository) : ViewModel() {
         }
     }
 
+    private var loadMealsJob: Job? = null
+
     fun loadMealsByCategory(category: String) {
-        viewModelScope.launch {
+        loadMealsJob?.cancel()
+        loadMealsJob = viewModelScope.launch {
             _mealsState.value = UIState.Loading
             try {
                 val meals = repository.getMealsByCategory(category)
@@ -58,8 +64,11 @@ class MealViewModel(private val repository: MealRepository) : ViewModel() {
         }
     }
 
+    private var loadMealDetailJob: Job? = null
+
     fun loadMealDetail(idMeal: String) {
-        viewModelScope.launch {
+        loadMealDetailJob?.cancel()
+        loadMealDetailJob = viewModelScope.launch {
             _mealDetailState.value = UIState.Loading
             try {
                 val detail = repository.getMealDetail(idMeal)
@@ -84,18 +93,17 @@ class MealViewModel(private val repository: MealRepository) : ViewModel() {
 
     fun checkIsFavorite(idMeal: String) {
         viewModelScope.launch {
-            _isFavoriteState.value = false
-            _isFavoriteState.value = repository.isFavorite(idMeal)
+            toggleFavoriteMutex.withLock {
+                _isFavoriteState.value = repository.isFavorite(idMeal)
+            }
         }
     }
 
-    private var isTogglingFavorite = false
+    private val toggleFavoriteMutex = Mutex()
 
     fun toggleFavorite(mealDetail: MealDetail) {
-        if (isTogglingFavorite) return
-        isTogglingFavorite = true
         viewModelScope.launch {
-            try {
+            toggleFavoriteMutex.withLock {
                 val favorite = FavoriteMeal(
                     idMeal = mealDetail.idMeal,
                     strMeal = mealDetail.strMeal,
@@ -108,8 +116,6 @@ class MealViewModel(private val repository: MealRepository) : ViewModel() {
                     repository.addFavorite(favorite)
                     _isFavoriteState.value = true
                 }
-            } finally {
-                isTogglingFavorite = false
             }
         }
     }
