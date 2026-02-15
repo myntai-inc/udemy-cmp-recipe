@@ -1,7 +1,9 @@
 package jp.myntai.udemy.recipe.navigation
 
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
@@ -62,9 +64,15 @@ fun AppNavHost(
         composable<MealDetail> { backStackEntry ->
             val viewModel = koinViewModel<MealDetailViewModel>()
             val route = backStackEntry.toRoute<MealDetail>()
+            val snackbarHostState = remember { SnackbarHostState() }
             LaunchedEffect(route.idMeal) {
                 viewModel.loadMealDetail(route.idMeal)
                 viewModel.setCurrentMealId(route.idMeal)
+            }
+            LaunchedEffect(Unit) {
+                viewModel.errorEvent.collect { message ->
+                    snackbarHostState.showSnackbar(message)
+                }
             }
             val mealDetailState = viewModel.mealDetailState.collectAsStateWithLifecycle()
             val isFavorite = viewModel.isFavoriteState.collectAsStateWithLifecycle()
@@ -79,6 +87,7 @@ fun AppNavHost(
                 },
                 onBackClick = { navController.popBackStack() },
                 onRetry = { viewModel.loadMealDetail(route.idMeal) },
+                snackbarHostState = snackbarHostState,
             )
         }
 
@@ -90,7 +99,6 @@ fun AppNavHost(
                 onMealClick = { idMeal ->
                     navController.navigate(MealDetail(idMeal))
                 },
-                onRetry = { },
             )
         }
     }

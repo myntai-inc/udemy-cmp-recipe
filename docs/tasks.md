@@ -403,14 +403,14 @@ MealViewModel のバグ修正と画面ごとの ViewModel 分割。
 
 ### Task 11.5: toggleFavorite() エラーハンドリング追加
 
-- [ ] `MealDetailViewModel.toggleFavorite()` に try-catch を追加
-- [ ] DB 操作失敗時にユーザーへ通知する仕組みを追加 (Snackbar 等)
+- [x] `MealDetailViewModel.toggleFavorite()` に try-catch を追加
+- [x] DB 操作失敗時にユーザーへ通知する仕組みを追加 (Snackbar 等)
 - **依存**: なし
 
 ### Task 11.6: FavoritesScreen の onRetry 整理
 
-- [ ] `FavoritesViewModel` は Flow ベースのため Error 状態にならない前提を明確化
-- [ ] `FavoritesScreen` から不要な `onRetry` パラメータを削除、または Error 表示自体を除去
+- [x] `FavoritesViewModel` は Flow ベースのため Error 状態にならない前提を明確化
+- [x] `FavoritesScreen` から不要な `onRetry` パラメータを削除、または Error 表示自体を除去
 - **依存**: なし
 
 ### Task 11.7: Scaffold 構造の統一
@@ -429,9 +429,9 @@ MealViewModel のバグ修正と画面ごとの ViewModel 分割。
 
 ### Task 11.9: 材料データ (Ingredients) の表示
 
-- [ ] `MealDetail` モデルに `strIngredient1`〜`strIngredient20` / `strMeasure1`〜`strMeasure20` を追加
-- [ ] 材料と分量をペアにしてリスト化するロジックを実装
-- [ ] `MealDetailScreen` に材料セクションを追加
+- [x] `MealDetail` モデルに `strIngredient1`〜`strIngredient20` / `strMeasure1`〜`strMeasure20` を追加
+- [x] 材料と分量をペアにしてリスト化するロジックを実装
+- [x] `MealDetailScreen` に材料セクションを追加
 - **依存**: なし
 
 ### Task 11.10: ViewModel のユニットテスト追加

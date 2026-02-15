@@ -18,7 +18,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import jp.myntai.udemy.recipe.data.model.FavoriteMeal
-import jp.myntai.udemy.recipe.ui.component.ErrorContent
 import jp.myntai.udemy.recipe.ui.component.MealListItem
 import jp.myntai.udemy.recipe.viewmodel.UIState
 
@@ -27,7 +26,6 @@ import jp.myntai.udemy.recipe.viewmodel.UIState
 fun FavoritesScreen(
     uiState: UIState<List<FavoriteMeal>>,
     onMealClick: (String) -> Unit,
-    onRetry: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
@@ -46,11 +44,12 @@ fun FavoritesScreen(
                 }
             }
             is UIState.Error -> {
-                ErrorContent(
-                    message = uiState.message,
-                    onRetry = onRetry,
+                Box(
                     modifier = Modifier.fillMaxSize().padding(innerPadding),
-                )
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Text(text = uiState.message)
+                }
             }
             is UIState.Success -> {
                 if (uiState.data.isEmpty()) {

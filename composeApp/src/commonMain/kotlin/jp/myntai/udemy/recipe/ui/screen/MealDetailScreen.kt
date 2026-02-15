@@ -20,6 +20,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -42,10 +44,12 @@ fun MealDetailScreen(
     onFavoriteClick: () -> Unit,
     onBackClick: () -> Unit,
     onRetry: () -> Unit,
+    snackbarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
         modifier = modifier,
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
                 title = {
@@ -119,6 +123,26 @@ fun MealDetailScreen(
                             text = "Area: ${meal.strArea}",
                             style = MaterialTheme.typography.titleMedium,
                         )
+                        val ingredients = meal.ingredients()
+                        if (ingredients.isNotEmpty()) {
+                            Spacer(modifier = Modifier.height(16.dp))
+                            Text(
+                                text = "Ingredients",
+                                style = MaterialTheme.typography.titleLarge,
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+                            ingredients.forEach { (ingredient, measure) ->
+                                val text = if (measure.isNotBlank()) {
+                                    "\u2022 $ingredient - $measure"
+                                } else {
+                                    "\u2022 $ingredient"
+                                }
+                                Text(
+                                    text = text,
+                                    style = MaterialTheme.typography.bodyLarge,
+                                )
+                            }
+                        }
                         Spacer(modifier = Modifier.height(16.dp))
                         Text(
                             text = "Instructions",
