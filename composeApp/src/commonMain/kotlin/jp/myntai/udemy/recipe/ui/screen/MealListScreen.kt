@@ -74,7 +74,7 @@ fun MealListScreen(
                     contentPadding = PaddingValues(12.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
-                    items(uiState.data) { meal ->
+                    items(uiState.data, key = { it.idMeal }) { meal ->
                         MealListItem(
                             mealName = meal.strMeal,
                             mealImageUrl = meal.strMealThumb,
