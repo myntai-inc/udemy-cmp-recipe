@@ -32,7 +32,7 @@ class MealViewModel(private val repository: MealRepository) : ViewModel() {
     val favoritesState: StateFlow<UIState<List<FavoriteMeal>>> =
         repository.getFavorites()
             .map<List<FavoriteMeal>, UIState<List<FavoriteMeal>>> { UIState.Success(it) }
-            .catch { emit(UIState.Error(it.message ?: "Failed to load favorites")) }
+            .catch { emit(UIState.Error((it as? Exception)?.toUserFriendlyMessage() ?: "An unexpected error occurred.")) }
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(5_000),
@@ -65,7 +65,7 @@ class MealViewModel(private val repository: MealRepository) : ViewModel() {
                 val categories = repository.getCategories()
                 _categoriesState.value = UIState.Success(categories)
             } catch (e: Exception) {
-                _categoriesState.value = UIState.Error(e.message ?: "Unknown error")
+                _categoriesState.value = UIState.Error(e.toUserFriendlyMessage())
             }
         }
     }
@@ -80,7 +80,7 @@ class MealViewModel(private val repository: MealRepository) : ViewModel() {
                 val meals = repository.getMealsByCategory(category)
                 _mealsState.value = UIState.Success(meals)
             } catch (e: Exception) {
-                _mealsState.value = UIState.Error(e.message ?: "Unknown error")
+                _mealsState.value = UIState.Error(e.toUserFriendlyMessage())
             }
         }
     }
@@ -99,7 +99,7 @@ class MealViewModel(private val repository: MealRepository) : ViewModel() {
                     _mealDetailState.value = UIState.Error("Meal not found")
                 }
             } catch (e: Exception) {
-                _mealDetailState.value = UIState.Error(e.message ?: "Unknown error")
+                _mealDetailState.value = UIState.Error(e.toUserFriendlyMessage())
             }
         }
     }
