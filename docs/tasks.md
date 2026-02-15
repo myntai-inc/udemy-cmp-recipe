@@ -413,18 +413,20 @@ MealViewModel のバグ修正と画面ごとの ViewModel 分割。
 - [x] `FavoritesScreen` から不要な `onRetry` パラメータを削除、または Error 表示自体を除去
 - **依存**: なし
 
-### Task 11.7: Scaffold 構造の統一
+### Task 11.7: ~~Scaffold 構造の統一~~ (見送り)
 
-- [ ] `App.kt` の Scaffold (bottomBar) と各画面の Scaffold (TopAppBar) のネストを解消
-- [ ] 各画面から個別の Scaffold を除去し、TopAppBar を `App.kt` 側で統一管理
-- [ ] 画面ごとのタイトル・ナビゲーションアイコンを NavBackStackEntry から動的に決定
+- **見送り理由**: 各画面に Scaffold を持たせるのは Compose の推奨パターン (Google 公式サンプルの Now in Android 等でも同様)。App.kt の Scaffold (bottomBar) と各画面の Scaffold (TopAppBar) のネストは正しく動作しており、画面ごとに独立して TopAppBar / FAB / SnackbarHost を管理できる利点がある。App.kt に全画面の情報を集約すると逆に密結合になるため、現状維持が適切。
+- ~~`App.kt` の Scaffold (bottomBar) と各画面の Scaffold (TopAppBar) のネストを解消~~
+- ~~各画面から個別の Scaffold を除去し、TopAppBar を `App.kt` 側で統一管理~~
+- ~~画面ごとのタイトル・ナビゲーションアイコンを NavBackStackEntry から動的に決定~~
 - **依存**: Task 11.4, Task 11.6
 
-### Task 11.8: テーマとダークモード対応
+### Task 11.8: ~~テーマとダークモード対応~~ (見送り)
 
-- [ ] `ui/theme/` パッケージにカスタムテーマを作成
-- [ ] `isSystemInDarkTheme()` でライト/ダーク切り替え
-- [ ] カスタムカラースキームを定義
+- **見送り理由**: Udemy 講座 KMP/CMP 習得用アプリとしてはカスタムテーマの導入は本筋から外れるため見送り。デフォルトの MaterialTheme で十分機能しており、学習目的のスコープ外。
+- ~~`ui/theme/` パッケージにカスタムテーマを作成~~
+- ~~`isSystemInDarkTheme()` でライト/ダーク切り替え~~
+- ~~カスタムカラースキームを定義~~
 - **依存**: なし
 
 ### Task 11.9: ~~材料データ (Ingredients) の表示~~ (見送り)
@@ -437,11 +439,11 @@ MealViewModel のバグ修正と画面ごとの ViewModel 分割。
 
 ### Task 11.10: ViewModel のユニットテスト追加
 
-- [ ] テスト用の依存 (kotlinx-coroutines-test, Turbine 等) を追加
-- [ ] `CategoryListViewModel` のテストを作成 (Loading → Success / Error)
-- [ ] `MealDetailViewModel` のテストを作成 (お気に入りトグル)
-- [ ] `FakeRepository` を作成してテスト用に差し替え
-- **依存**: Task 11.1〜11.9 完了後
+- [x] テスト用の依存 (kotlinx-coroutines-test, Turbine 等) を追加
+- [x] `CategoryListViewModel` のテストを作成 (Loading → Success / Error)
+- [x] `MealDetailViewModel` のテストを作成 (お気に入りトグル)
+- [x] `FakeRepository` を作成してテスト用に差し替え
+- **依存**: Task 11.1〜11.6 完了後 (11.7〜11.9 は見送り)
 
 ---
 
