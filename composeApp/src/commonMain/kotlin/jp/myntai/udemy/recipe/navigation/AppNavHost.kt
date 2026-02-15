@@ -83,7 +83,7 @@ fun AppNavHost(
                 onMealClick = { idMeal ->
                     navController.navigate(MealDetail(idMeal))
                 },
-                onRetry = { viewModel.loadFavorites() },
+                onRetry = { },
             )
         }
     }
