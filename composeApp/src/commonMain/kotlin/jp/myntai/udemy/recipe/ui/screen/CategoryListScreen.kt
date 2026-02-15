@@ -52,7 +52,7 @@ fun CategoryListScreen(
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
-                items(uiState.data) { category ->
+                items(uiState.data, key = { it.idCategory }) { category ->
                     CategoryCard(
                         categoryName = category.strCategory,
                         categoryImageUrl = category.strCategoryThumb,
