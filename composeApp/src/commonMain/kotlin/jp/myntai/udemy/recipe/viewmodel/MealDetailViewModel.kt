@@ -7,12 +7,9 @@ import jp.myntai.udemy.recipe.data.model.MealDetail
 import jp.myntai.udemy.recipe.repository.MealRepository
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
@@ -23,8 +20,8 @@ class MealDetailViewModel(private val repository: MealRepository) : ViewModel() 
     private val _mealDetailState = MutableStateFlow<UIState<MealDetail>>(UIState.Loading)
     val mealDetailState: StateFlow<UIState<MealDetail>> = _mealDetailState.asStateFlow()
 
-    private val _errorEvent = MutableSharedFlow<String>()
-    val errorEvent: SharedFlow<String> = _errorEvent.asSharedFlow()
+    private val _userMessage = MutableStateFlow<String?>(null)
+    val userMessage: StateFlow<String?> = _userMessage.asStateFlow()
 
     private val _currentMealId = MutableStateFlow<String?>(null)
 
@@ -36,6 +33,10 @@ class MealDetailViewModel(private val repository: MealRepository) : ViewModel() 
             started = SharingStarted.WhileSubscribed(5_000),
             initialValue = false,
         )
+
+    fun messageShown() {
+        _userMessage.value = null
+    }
 
     fun setCurrentMealId(idMeal: String) {
         _currentMealId.value = idMeal
@@ -78,7 +79,7 @@ class MealDetailViewModel(private val repository: MealRepository) : ViewModel() 
             } catch (e: CancellationException) {
                 throw e
             } catch (_: Exception) {
-                _errorEvent.emit("Failed to update favorite. Please try again.")
+                _userMessage.value = "Failed to update favorite. Please try again."
             }
         }
     }

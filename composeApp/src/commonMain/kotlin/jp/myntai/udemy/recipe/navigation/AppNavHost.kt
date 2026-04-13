@@ -69,9 +69,11 @@ fun AppNavHost(
                 viewModel.loadMealDetail(route.idMeal)
                 viewModel.setCurrentMealId(route.idMeal)
             }
-            LaunchedEffect(Unit) {
-                viewModel.errorEvent.collect { message ->
+            val userMessage = viewModel.userMessage.collectAsStateWithLifecycle()
+            userMessage.value?.let { message ->
+                LaunchedEffect(message) {
                     snackbarHostState.showSnackbar(message)
+                    viewModel.messageShown()
                 }
             }
             val mealDetailState = viewModel.mealDetailState.collectAsStateWithLifecycle()

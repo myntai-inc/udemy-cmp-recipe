@@ -7,6 +7,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import kotlin.test.AfterTest
@@ -14,6 +15,7 @@ import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
+import kotlin.test.assertNull
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class MealDetailViewModelTest {
@@ -120,15 +122,17 @@ class MealDetailViewModelTest {
     }
 
     @Test
-    fun `toggleFavorite emits errorEvent on failure`() = runTest {
+    fun `toggleFavorite sets userMessage on failure`() = runTest {
         repository.mealDetailToReturn = testMealDetail
         viewModel.setCurrentMealId("123")
         repository.addFavoriteException = RuntimeException("DB error")
 
-        viewModel.errorEvent.test {
-            viewModel.toggleFavorite(testMealDetail)
+        assertNull(viewModel.userMessage.value)
+        viewModel.toggleFavorite(testMealDetail)
+        advanceUntilIdle()
+        assertEquals("Failed to update favorite. Please try again.", viewModel.userMessage.value)
 
-            assertEquals("Failed to update favorite. Please try again.", awaitItem())
-        }
+        viewModel.messageShown()
+        assertNull(viewModel.userMessage.value)
     }
 }
