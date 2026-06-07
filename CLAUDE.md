@@ -13,16 +13,29 @@ Targets: Android, iOS, Desktop (JVM).
 - Commit message: `feat: {summary}` format
 - After each PR creation, wait for user confirmation before proceeding to the next task
 
+## Module Structure
+
+Multi-module layout (matches the latest Kotlin Multiplatform wizard):
+
+- `shared/` — KMP library with all shared code (Android via
+  `com.android.kotlin.multiplatform.library`, iOS, JVM). Holds common/iOS/JVM/Android
+  source sets, Room + KSP, namespace `jp.myntai.udemy.recipe.shared`.
+- `androidApp/` — `com.android.application`. MainActivity, manifest, launcher resources.
+- `desktopApp/` — `org.jetbrains.kotlin.jvm`. Compose Desktop entry point (`main.kt`).
+- `iosApp/` — Xcode project; builds the `ComposeApp` framework from `:shared`.
+
 ## Build Commands
 
-- Android debug build: `./gradlew :composeApp:assembleDebug`
-- Desktop run: `./gradlew :composeApp:run`
-- Compile check (Desktop): `./gradlew :composeApp:compileKotlinDesktop`
+- Android debug build: `./gradlew :androidApp:assembleDebug`
+- Desktop run: `./gradlew :desktopApp:run`
+- Compile check (Desktop/common): `./gradlew :shared:compileKotlinJvm`
+- Run unit tests: `./gradlew :shared:jvmTest`
+- iOS framework (called by Xcode): `./gradlew :shared:embedAndSignAppleFrameworkForXcode`
 
 ## Package Structure
 
 ```
-composeApp/src/commonMain/kotlin/jp/myntai/udemy/recipe/
+shared/src/commonMain/kotlin/jp/myntai/udemy/recipe/
   ├── data/
   │   ├── model/        # Data models (Category, Meal, MealDetail, FavoriteMeal)
   │   ├── local/        # Room DB (AppDatabase, FavoriteMealDao)
@@ -40,11 +53,15 @@ composeApp/src/commonMain/kotlin/jp/myntai/udemy/recipe/
 
 | Library | Version |
 |---------|---------|
-| Coil3 | 3.3.0 |
+| AGP | 9.2.1 |
+| Gradle | 9.5.1 |
+| Kotlin | 2.4.0 |
+| KSP | 2.3.9 |
+| Compose Multiplatform | 1.11.1 |
+| Coil3 | 3.5.0-beta01 |
 | Room KMP | 2.8.4 |
-| KSP | 2.3.5 |
 | SQLite Bundled | 2.6.2 |
-| Koin | 4.1.1 |
-| Ktor | 3.4.0 |
-| kotlinx.serialization | 1.10.0 |
-| Navigation Compose | 2.9.1 |
+| Koin | 4.2.1 |
+| Ktor | 3.5.0 |
+| kotlinx.serialization | 1.11.0 |
+| Navigation Compose | 2.9.2 |
