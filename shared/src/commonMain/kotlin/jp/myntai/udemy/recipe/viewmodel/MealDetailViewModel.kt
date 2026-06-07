@@ -1,9 +1,12 @@
 package jp.myntai.udemy.recipe.viewmodel
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import jp.myntai.udemy.recipe.data.model.FavoriteMeal
 import jp.myntai.udemy.recipe.data.model.MealDetail
+import jp.myntai.udemy.recipe.navigation.MealDetail as MealDetailRoute
 import jp.myntai.udemy.recipe.repository.MealRepository
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
@@ -11,11 +14,18 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-class MealDetailViewModel(private val repository: MealRepository) : ViewModel() {
+class MealDetailViewModel(
+    savedStateHandle: SavedStateHandle,
+    private val repository: MealRepository,
+) : ViewModel() {
+
+    // The destination owns its input: read the typed nav route from the handle
+    // instead of having the NavHost push the id in through a LaunchedEffect.
+    private val idMeal: String = savedStateHandle.toRoute<MealDetailRoute>().idMeal
 
     private val _mealDetailState = MutableStateFlow<UIState<MealDetail>>(UIState.Loading)
     val mealDetailState: StateFlow<UIState<MealDetail>> = _mealDetailState.asStateFlow()
@@ -23,28 +33,26 @@ class MealDetailViewModel(private val repository: MealRepository) : ViewModel() 
     private val _userMessage = MutableStateFlow<String?>(null)
     val userMessage: StateFlow<String?> = _userMessage.asStateFlow()
 
-    private val _currentMealId = MutableStateFlow<String?>(null)
-
     val isFavoriteState: StateFlow<Boolean> =
-        combine(repository.getFavorites(), _currentMealId) { favorites, currentMealId ->
-            favorites.any { it.idMeal == currentMealId }
-        }.stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = false,
-        )
+        repository.getFavorites()
+            .map { favorites -> favorites.any { it.idMeal == idMeal } }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5_000),
+                initialValue = false,
+            )
+
+    private var loadMealDetailJob: Job? = null
+
+    init {
+        loadMealDetail()
+    }
 
     fun messageShown() {
         _userMessage.value = null
     }
 
-    fun setCurrentMealId(idMeal: String) {
-        _currentMealId.value = idMeal
-    }
-
-    private var loadMealDetailJob: Job? = null
-
-    fun loadMealDetail(idMeal: String) {
+    fun loadMealDetail() {
         loadMealDetailJob?.cancel()
         loadMealDetailJob = viewModelScope.launch {
             _mealDetailState.value = UIState.Loading

@@ -1,13 +1,14 @@
 package jp.myntai.udemy.recipe.viewmodel
 
+import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
 import jp.myntai.udemy.recipe.data.model.MealDetail
 import jp.myntai.udemy.recipe.repository.FakeMealRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
-import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.advanceUntilIdle
+import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import kotlin.test.AfterTest
@@ -22,7 +23,6 @@ class MealDetailViewModelTest {
 
     private val testDispatcher = StandardTestDispatcher()
     private lateinit var repository: FakeMealRepository
-    private lateinit var viewModel: MealDetailViewModel
 
     private val testMealDetail = MealDetail(
         idMeal = "123",
@@ -37,7 +37,6 @@ class MealDetailViewModelTest {
     fun setup() {
         Dispatchers.setMain(testDispatcher)
         repository = FakeMealRepository()
-        viewModel = MealDetailViewModel(repository)
     }
 
     @AfterTest
@@ -45,14 +44,18 @@ class MealDetailViewModelTest {
         Dispatchers.resetMain()
     }
 
+    // The ViewModel reads its meal id from the SavedStateHandle (typed nav route)
+    // and loads in init, mirroring how Koin/Navigation provide it at runtime.
+    private fun createViewModel(idMeal: String = "123") =
+        MealDetailViewModel(SavedStateHandle(mapOf("idMeal" to idMeal)), repository)
+
     @Test
-    fun `loadMealDetail emits Loading then Success`() = runTest {
+    fun `emits Loading then Success`() = runTest {
         repository.mealDetailToReturn = testMealDetail
+        val viewModel = createViewModel()
 
         viewModel.mealDetailState.test {
             assertIs<UIState.Loading>(awaitItem())
-
-            viewModel.loadMealDetail("123")
 
             val success = awaitItem()
             assertIs<UIState.Success<MealDetail>>(success)
@@ -61,13 +64,12 @@ class MealDetailViewModelTest {
     }
 
     @Test
-    fun `loadMealDetail emits Error when null returned`() = runTest {
+    fun `emits Error when null returned`() = runTest {
         repository.mealDetailToReturn = null
+        val viewModel = createViewModel("999")
 
         viewModel.mealDetailState.test {
             assertIs<UIState.Loading>(awaitItem())
-
-            viewModel.loadMealDetail("999")
 
             val error = awaitItem()
             assertIs<UIState.Error>(error)
@@ -76,13 +78,12 @@ class MealDetailViewModelTest {
     }
 
     @Test
-    fun `loadMealDetail emits Error when exception thrown`() = runTest {
+    fun `emits Error when exception thrown`() = runTest {
         repository.exceptionToThrow = RuntimeException("Network error")
+        val viewModel = createViewModel()
 
         viewModel.mealDetailState.test {
             assertIs<UIState.Loading>(awaitItem())
-
-            viewModel.loadMealDetail("123")
 
             val error = awaitItem()
             assertIs<UIState.Error>(error)
@@ -91,8 +92,7 @@ class MealDetailViewModelTest {
 
     @Test
     fun `toggleFavorite adds favorite when not favorited`() = runTest {
-        repository.mealDetailToReturn = testMealDetail
-        viewModel.setCurrentMealId("123")
+        val viewModel = createViewModel()
 
         viewModel.isFavoriteState.test {
             assertEquals(false, awaitItem())
@@ -105,8 +105,7 @@ class MealDetailViewModelTest {
 
     @Test
     fun `toggleFavorite removes favorite when already favorited`() = runTest {
-        repository.mealDetailToReturn = testMealDetail
-        viewModel.setCurrentMealId("123")
+        val viewModel = createViewModel()
 
         viewModel.isFavoriteState.test {
             assertEquals(false, awaitItem())
@@ -123,8 +122,7 @@ class MealDetailViewModelTest {
 
     @Test
     fun `toggleFavorite sets userMessage on failure`() = runTest {
-        repository.mealDetailToReturn = testMealDetail
-        viewModel.setCurrentMealId("123")
+        val viewModel = createViewModel()
         repository.addFavoriteException = RuntimeException("DB error")
 
         assertNull(viewModel.userMessage.value)

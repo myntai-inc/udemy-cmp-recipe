@@ -9,7 +9,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.toRoute
 import jp.myntai.udemy.recipe.ui.screen.CategoryListScreen
 import jp.myntai.udemy.recipe.ui.screen.FavoritesScreen
 import jp.myntai.udemy.recipe.ui.screen.MealDetailScreen
@@ -43,32 +42,23 @@ fun AppNavHost(
             )
         }
 
-        composable<MealList> { backStackEntry ->
+        composable<MealList> {
             val viewModel = koinViewModel<MealListViewModel>()
-            val route = backStackEntry.toRoute<MealList>()
-            LaunchedEffect(route.category) {
-                viewModel.loadMealsByCategory(route.category)
-            }
             val mealsState = viewModel.mealsState.collectAsStateWithLifecycle()
             MealListScreen(
                 uiState = mealsState.value,
-                title = route.category,
+                title = viewModel.category,
                 onMealClick = { idMeal ->
                     navController.navigate(MealDetail(idMeal))
                 },
                 onBackClick = { navController.popBackStack() },
-                onRetry = { viewModel.loadMealsByCategory(route.category) },
+                onRetry = { viewModel.loadMeals() },
             )
         }
 
-        composable<MealDetail> { backStackEntry ->
+        composable<MealDetail> {
             val viewModel = koinViewModel<MealDetailViewModel>()
-            val route = backStackEntry.toRoute<MealDetail>()
             val snackbarHostState = remember { SnackbarHostState() }
-            LaunchedEffect(route.idMeal) {
-                viewModel.loadMealDetail(route.idMeal)
-                viewModel.setCurrentMealId(route.idMeal)
-            }
             val userMessage = viewModel.userMessage.collectAsStateWithLifecycle()
             userMessage.value?.let { message ->
                 LaunchedEffect(message) {
@@ -88,7 +78,7 @@ fun AppNavHost(
                     }
                 },
                 onBackClick = { navController.popBackStack() },
-                onRetry = { viewModel.loadMealDetail(route.idMeal) },
+                onRetry = { viewModel.loadMealDetail() },
                 snackbarHostState = snackbarHostState,
             )
         }

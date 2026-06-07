@@ -44,7 +44,7 @@ val appModule = module {
     single<RemoteDataSource> { RemoteDataSource(get()) }
     single<MealRepository> { MealRepositoryImpl(get(), get()) }
     viewModel { CategoryListViewModel(get()) }
-    viewModel { MealListViewModel(get()) }
-    viewModel { MealDetailViewModel(get()) }
+    viewModel { MealListViewModel(get(), get()) }
+    viewModel { MealDetailViewModel(get(), get()) }
     viewModel { FavoritesViewModel(get()) }
 }
