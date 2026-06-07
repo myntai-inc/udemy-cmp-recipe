@@ -1,8 +1,5 @@
 package jp.myntai.udemy.recipe.ui.component
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -13,9 +10,13 @@ import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
+import cmprecipe.shared.generated.resources.Res
+import cmprecipe.shared.generated.resources.ic_favorite
+import cmprecipe.shared.generated.resources.ic_home
 import jp.myntai.udemy.recipe.navigation.CategoryList
 import jp.myntai.udemy.recipe.navigation.Favorites
 import jp.myntai.udemy.recipe.navigation.MealList
+import org.jetbrains.compose.resources.vectorResource
 
 @Composable
 fun BottomNavigationBar(
@@ -38,7 +39,7 @@ fun BottomNavigationBar(
                     restoreState = true
                 }
             },
-            icon = { Icon(Icons.Filled.Home, contentDescription = "Home") },
+            icon = { Icon(vectorResource(Res.drawable.ic_home), contentDescription = "Home") },
             label = { Text("Home") },
         )
         NavigationBarItem(
@@ -52,7 +53,7 @@ fun BottomNavigationBar(
                     restoreState = true
                 }
             },
-            icon = { Icon(Icons.Filled.Favorite, contentDescription = "Favorites") },
+            icon = { Icon(vectorResource(Res.drawable.ic_favorite), contentDescription = "Favorites") },
             label = { Text("Favorites") },
         )
     }

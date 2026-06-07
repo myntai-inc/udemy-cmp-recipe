@@ -9,10 +9,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -31,10 +27,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import cmprecipe.shared.generated.resources.Res
+import cmprecipe.shared.generated.resources.ic_arrow_back
+import cmprecipe.shared.generated.resources.ic_favorite
+import cmprecipe.shared.generated.resources.ic_favorite_border
 import coil3.compose.AsyncImage
 import jp.myntai.udemy.recipe.data.model.MealDetail
 import jp.myntai.udemy.recipe.ui.component.ErrorContent
 import jp.myntai.udemy.recipe.viewmodel.UIState
+import org.jetbrains.compose.resources.vectorResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -63,7 +64,7 @@ fun MealDetailScreen(
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
                         Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            imageVector = vectorResource(Res.drawable.ic_arrow_back),
                             contentDescription = "Back",
                         )
                     }
@@ -74,7 +75,11 @@ fun MealDetailScreen(
             if (uiState is UIState.Success) {
                 FloatingActionButton(onClick = onFavoriteClick) {
                     Icon(
-                        imageVector = if (isFavorite) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
+                        imageVector = if (isFavorite) {
+                            vectorResource(Res.drawable.ic_favorite)
+                        } else {
+                            vectorResource(Res.drawable.ic_favorite_border)
+                        },
                         contentDescription = if (isFavorite) "Remove from favorites" else "Add to favorites",
                     )
                 }
