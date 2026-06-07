@@ -11,6 +11,11 @@ plugins {
 }
 
 kotlin {
+    compilerOptions {
+        // Room generates expect/actual classes (AppDatabaseConstructor); opt in to silence the Beta warning.
+        freeCompilerArgs.add("-Xexpect-actual-classes")
+    }
+
     listOf(
         iosArm64(),
         iosSimulatorArm64()
