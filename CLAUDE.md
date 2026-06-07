@@ -58,7 +58,7 @@ shared/src/commonMain/kotlin/jp/myntai/udemy/recipe/
 | Kotlin | 2.4.0 |
 | KSP | 2.3.9 |
 | Compose Multiplatform | 1.11.1 |
-| Coil3 | 3.4.0 |
+| Coil3 | 3.5.0-beta01 |
 | Room KMP | 2.8.4 |
 | SQLite Bundled | 2.6.2 |
 | Koin | 4.2.1 |
