@@ -73,13 +73,10 @@ fun MealDetailScreen(
         },
         floatingActionButton = {
             if (uiState is UIState.Success) {
+                val favoriteIcon = if (isFavorite) Res.drawable.ic_favorite else Res.drawable.ic_favorite_border
                 FloatingActionButton(onClick = onFavoriteClick) {
                     Icon(
-                        imageVector = if (isFavorite) {
-                            vectorResource(Res.drawable.ic_favorite)
-                        } else {
-                            vectorResource(Res.drawable.ic_favorite_border)
-                        },
+                        imageVector = vectorResource(favoriteIcon),
                         contentDescription = if (isFavorite) "Remove from favorites" else "Add to favorites",
                     )
                 }
